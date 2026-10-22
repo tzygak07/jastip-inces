@@ -1,26 +1,117 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
+/* =====================================================
+   TOKEN WARNA — Jastip Nces Dong
+   Sumber: DESIGN.md
+   ===================================================== */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Brand colors */
+  --color-brand-blue: #0b3c91;
+  --color-brand-orange: #e8502a;
+  --color-brand-orange-text: #c23e1b;
+  --color-brand-tint: #eef3fc;
+  --color-brand-white: #ffffff;
+
+  /* Alias background/foreground */
+  --color-background: #ffffff;
+  --color-foreground: #0b3c91;
+
+  /* Font */
+  --font-heading: var(--font-rubik), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-nunito-sans), ui-sans-serif, system-ui, sans-serif;
+
+  /* Radius */
+  --radius-image: 8px;
+  --radius-card: 12px;
+  --radius-button: 10px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* =====================================================
+   BASE
+   ===================================================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-background);
+  color: var(--color-brand-blue);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.6;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+/* =====================================================
+   FOCUS RING — aksesibilitas keyboard
+   ===================================================== */
+:focus-visible {
+  outline: 3px solid var(--color-brand-orange);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* =====================================================
+   SCROLLBAR (opsional, kosmetik)
+   ===================================================== */
+@media (pointer: fine) {
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #c8d5ef;
+    border-radius: 99px;
+  }
+}
+
+/* =====================================================
+   UTILITY: teks panjang dengan baris baru dari Airtable
+   ===================================================== */
+.whitespace-pre-line {
+  white-space: pre-line;
+}
+
+/* =====================================================
+   MOTIF: border stitched (jahitan putus-putus)
+   Dipakai di banner batch aktif dan frame foto
+   ===================================================== */
+.stitched {
+  border: 2px dashed var(--color-brand-blue);
+  border-radius: var(--radius-card);
+}
+
+/* =====================================================
+   ANIMASI — hanya hover/press, hormati reduced-motion
+   ===================================================== */
+@media (prefers-reduced-motion: no-preference) {
+  .btn-hover {
+    transition: transform 80ms ease, opacity 80ms ease;
+  }
+  .btn-hover:active {
+    transform: scale(0.97);
+  }
 }
