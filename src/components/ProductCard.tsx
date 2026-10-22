@@ -3,7 +3,8 @@ import Link from "next/link";
 import type { Product } from "@/src/lib/airtable/types";
 import { formatRupiah } from "@/src/lib/format";
 import { getWhatsAppLinkProduct } from "@/src/lib/whatsapp";
-import { cloudinaryLoader } from "@/src/lib/cloudinary";
+import { cloudinaryUrl } from "@/src/lib/cloudinary";
+
 
 interface ProductCardProps {
   product: Product;
@@ -35,13 +36,14 @@ export default function ProductCard({
         <div className="w-full h-44 rounded-lg overflow-hidden relative border-2 border-brand-blue/30 bg-brand-tint flex flex-col items-center justify-center text-center p-3">
           {product.photoUrl ? (
             <Image
-              loader={cloudinaryLoader}
-              src={product.photoUrl}
+              src={cloudinaryUrl(product.photoUrl, 600)}
               alt={product.name}
               fill
+              unoptimized
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
               className="object-cover"
             />
+
           ) : (
             <div className="flex flex-col items-center justify-center gap-1 w-full h-full stitched p-2">
               <span className="font-heading text-xs sm:text-sm text-brand-blue font-bold">
