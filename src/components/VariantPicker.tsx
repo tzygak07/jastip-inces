@@ -43,11 +43,6 @@ function VariantOption({
           {variant}
         </span>
       </div>
-      {isSelected ? (
-        <span aria-hidden="true" className="text-white text-xs font-bold shrink-0">
-          ✓
-        </span>
-      ) : null}
     </label>
   );
 }
