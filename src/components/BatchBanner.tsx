@@ -2,13 +2,70 @@ import type { Batch } from "@/src/lib/airtable/types";
 import { getEffectiveStatus } from "@/src/lib/airtable/batches";
 import { formatDate } from "@/src/lib/format";
 
+import Link from "next/link";
+
 interface BatchBannerProps {
   batch: Batch;
+  variant?: "full" | "compact";
 }
 
-export default function BatchBanner({ batch }: BatchBannerProps) {
+export default function BatchBanner({
+  batch,
+  variant = "full",
+}: BatchBannerProps) {
   const status = getEffectiveStatus(batch);
   const isOpen = status === "Open";
+
+  if (variant === "compact") {
+    return (
+      <div className="relative w-full bg-white rounded-xl border-2 border-dashed border-brand-blue p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 overflow-hidden">
+        {/* Hang Tag Motif: EXACTLY ONE HEART TAG ON SCREEN */}
+        <div
+          aria-hidden="true"
+          className="absolute -top-1 right-2 sm:right-3 pointer-events-none select-none z-10"
+        >
+          <div className="w-6 h-8 flex flex-col items-center">
+            <div className="w-[2px] h-3 bg-brand-blue" />
+            <div className="w-5 h-5 rounded-full bg-brand-orange border-2 border-brand-blue flex items-center justify-center text-white text-[10px] font-bold shadow-[1px_1px_0px_#0B3C91]">
+              ♥
+            </div>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-1 pr-8 sm:pr-10">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="inline-flex items-center justify-center px-2.5 py-0.5 text-xs font-semibold rounded-full border-2 border-brand-blue bg-brand-tint text-brand-blue">
+              {batch.name}
+              {batch.country ? ` · ${batch.country}` : ""}
+            </span>
+            <span
+              className={`inline-flex items-center justify-center px-2.5 py-0.5 text-xs font-bold rounded-full border-2 border-brand-blue ${
+                isOpen
+                  ? "bg-brand-orange text-white"
+                  : "bg-brand-tint text-brand-blue"
+              }`}
+            >
+              {isOpen ? "Buka" : "Tutup"}
+            </span>
+          </div>
+          <p className="font-body text-xs sm:text-sm text-brand-blue mt-0.5 font-normal">
+            {batch.closeDate ? `Batas titip: ${formatDate(batch.closeDate)}` : null}
+            {batch.closeDate && batch.estimatedArrival ? " · " : ""}
+            {batch.estimatedArrival
+              ? `Est. tiba: ${formatDate(batch.estimatedArrival)}`
+              : null}
+          </p>
+        </div>
+
+        <Link
+          href={`/?batch=${batch.id}#product-catalog`}
+          className="self-start sm:self-auto min-h-[44px] px-3.5 py-1.5 inline-flex items-center rounded-[10px] border-2 border-brand-blue bg-white text-brand-blue hover:bg-brand-tint font-semibold text-xs whitespace-nowrap transition-colors"
+        >
+          Lihat Batch Ini
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <section className="relative w-full bg-white rounded-xl border-2 border-brand-blue p-4 sm:p-6 overflow-hidden">
@@ -60,11 +117,9 @@ export default function BatchBanner({ batch }: BatchBannerProps) {
             {batch.country ? ` · ${batch.country}` : ""}
           </h2>
 
-          <div className="flex items-center gap-3 flex-wrap font-body text-xs sm:text-sm text-brand-blue">
+          <div className="flex items-center gap-3 flex-wrap font-body text-xs sm:text-sm text-brand-blue font-normal">
             {batch.closeDate ? (
-              <span className="flex items-center gap-1">
-                <span className="font-bold">Tutup:</span> {formatDate(batch.closeDate)}
-              </span>
+              <span>Batas titip: {formatDate(batch.closeDate)}</span>
             ) : null}
 
             {batch.closeDate && batch.estimatedArrival ? (
@@ -74,10 +129,7 @@ export default function BatchBanner({ batch }: BatchBannerProps) {
             ) : null}
 
             {batch.estimatedArrival ? (
-              <span className="flex items-center gap-1">
-                <span className="font-bold">Estimasi tiba:</span>{" "}
-                {formatDate(batch.estimatedArrival)}
-              </span>
+              <span>Estimasi tiba: {formatDate(batch.estimatedArrival)}</span>
             ) : null}
           </div>
         </div>

@@ -21,8 +21,8 @@ export default function BatchSwitcher({
 
   return (
     <nav aria-label="Pemilih Batch" className="flex flex-col gap-1.5">
-      <span className="font-heading text-xs text-brand-blue tracking-wider uppercase font-bold">
-        PILIH BATCH PERJALANAN
+      <span className="font-heading text-xs text-brand-blue font-bold">
+        Pilih batch perjalanan
       </span>
       <div
         className="flex items-center gap-2 overflow-x-auto pb-1.5 scrollbar-none"

@@ -42,4 +42,5 @@ export interface Product {
   description?: string;
   storeNotes?: string;
   shippingInfo?: string;
+  addedAt?: string;
 }

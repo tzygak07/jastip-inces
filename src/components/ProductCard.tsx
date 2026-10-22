@@ -66,7 +66,7 @@ export default function ProductCard({
         {/* Product Details */}
         <div className="flex flex-col pt-1">
           {product.category ? (
-            <span className="font-body text-[11px] sm:text-xs text-brand-orange-text font-bold tracking-wide uppercase">
+            <span className="font-body text-[11px] sm:text-xs text-brand-orange-text font-semibold">
               {product.category}
             </span>
           ) : null}
@@ -74,7 +74,7 @@ export default function ProductCard({
           <h3 className="font-heading text-sm sm:text-base text-brand-blue mt-0.5 leading-snug line-clamp-2">
             <Link
               href={`/barang/${product.id}`}
-              className="hover:underline focus-visible:outline-none"
+              className="hover:underline focus-visible:outline-none after:absolute after:inset-0 after:z-0"
             >
               {product.name}
             </Link>
@@ -89,7 +89,7 @@ export default function ProductCard({
       </div>
 
       {/* Price & Action Button */}
-      <div className="flex flex-col gap-2 pt-2 border-t-2 border-brand-tint">
+      <div className="flex flex-col gap-2 pt-2 border-t-2 border-brand-tint relative z-10">
         {product.price !== undefined ? (
           <div className="font-heading text-base sm:text-lg text-brand-blue font-bold tracking-tight">
             {formatRupiah(product.price)}

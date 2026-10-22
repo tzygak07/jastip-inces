@@ -32,4 +32,5 @@ export const PRODUCT_FIELDS = {
   description: "Deskripsi",
   storeNotes: "Catatan Toko",
   shippingInfo: "Info Pengiriman",
+  addedAt: "Ditambahkan",
 } as const;

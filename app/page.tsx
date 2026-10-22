@@ -8,7 +8,7 @@ import BatchBanner from "@/src/components/BatchBanner";
 import BatchSwitcher from "@/src/components/BatchSwitcher";
 import CategoryFilter from "@/src/components/CategoryFilter";
 import CatalogControls from "@/src/components/CatalogControls";
-import ProductCard from "@/src/components/ProductCard";
+import ProductGrid from "@/src/components/ProductGrid";
 import CustomRequestBox from "@/src/components/CustomRequestBox";
 
 interface HomePageProps {
@@ -22,7 +22,6 @@ interface HomePageProps {
 
 export default async function HomePage(props: HomePageProps) {
   await connection(); // render per-request, bukan prerender
-  const nowMs = Date.now();
 
   const searchParams = await props.searchParams;
   const batchParam = searchParams.batch;
@@ -52,12 +51,12 @@ export default async function HomePage(props: HomePageProps) {
     }
     if (!activeBatch) {
       activeBatch =
-        batches.find((b) => getEffectiveStatus(b, nowMs) === "Open") ?? batches[0];
+        batches.find((b) => getEffectiveStatus(b) === "Open") ?? batches[0];
     }
   }
 
   const isBatchClosed = activeBatch
-    ? getEffectiveStatus(activeBatch, nowMs) === "Closed"
+    ? getEffectiveStatus(activeBatch) === "Closed"
     : false;
 
   // Filter barang per batch
@@ -91,6 +90,21 @@ export default async function HomePage(props: HomePageProps) {
     displayedProducts = [...displayedProducts].sort(
       (a, b) => (b.price ?? 0) - (a.price ?? 0)
     );
+  } else {
+    // Default / "terbaru": paling baru di atas berdasarkan addedAt
+    displayedProducts = [...displayedProducts].sort((a, b) => {
+      if (a.addedAt && b.addedAt) {
+        const timeA = new Date(a.addedAt).getTime();
+        const timeB = new Date(b.addedAt).getTime();
+        if (!isNaN(timeA) && !isNaN(timeB) && timeB !== timeA) {
+          return timeB - timeA;
+        }
+        return 0; // Waktu sama -> pertahankan urutan record asli Airtable
+      }
+      if (a.addedAt && !b.addedAt) return -1; // Ada addedAt di atas
+      if (!a.addedAt && b.addedAt) return 1;  // Tanpa addedAt di bawah
+      return 0; // Keduanya tanpa addedAt -> pertahankan urutan record asli Airtable
+    });
   }
 
   return (
@@ -160,17 +174,12 @@ export default async function HomePage(props: HomePageProps) {
             {/* PRODUCT GRID CONTAINER */}
             <div className="w-full">
               {displayedProducts.length > 0 ? (
-                /* Grid 2 kolom di HP, 4 kolom di desktop per PAGES.md */
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 w-full">
-                  {displayedProducts.map((product) => (
-                    <ProductCard
-                      key={product.id}
-                      product={product}
-                      batchName={activeBatch?.name ?? "Katalog"}
-                      isBatchClosed={isBatchClosed}
-                    />
-                  ))}
-                </div>
+                <ProductGrid
+                  key={`${activeBatch?.id ?? "all"}-${categoryParam ?? "all"}-${queryParam ?? ""}-${sortParam}`}
+                  products={displayedProducts}
+                  batchName={activeBatch?.name ?? "Katalog"}
+                  isBatchClosed={isBatchClosed}
+                />
               ) : queryParam ? (
                 /* Pencarian Nihil */
                 <div className="w-full bg-white border-2 border-brand-blue rounded-xl p-8 sm:p-12 text-center flex flex-col items-center justify-center gap-3">

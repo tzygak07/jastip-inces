@@ -2,7 +2,7 @@ import Image from "next/image";
 import { getWhatsAppLinkGeneral } from "@/src/lib/whatsapp";
 
 export default function Footer() {
-  const currentYear = 2025;
+  const currentYear = 2026;
   const instagramUrl = process.env.NEXT_PUBLIC_INSTAGRAM_URL?.trim();
   const tiktokUrl = process.env.NEXT_PUBLIC_TIKTOK_URL?.trim();
   const waLink = getWhatsAppLinkGeneral();

@@ -7,18 +7,20 @@ import { fetchAllRecords, getString, getNumber, getFirstLinkId } from "./client"
 import { PRODUCT_FIELDS } from "./fields";
 import type { Product, StockStatus, Category } from "./types";
 
-const KNOWN_STOCKS: StockStatus[] = ["Available", "Sold Out"];
 const KNOWN_CATEGORIES: Category[] = [
   "Skincare", "Branded", "Food", "Cute Stuff", "Luggage", "Shoes", "Bags",
 ];
 
 function mapStock(raw: string | undefined): StockStatus {
-  if (raw && (KNOWN_STOCKS as string[]).includes(raw)) {
-    return raw as StockStatus;
+  if (!raw) return "Available";
+  const val = raw.trim().toLowerCase();
+  if (val === "available" || val === "tersedia") {
+    return "Available";
   }
-  if (raw) {
-    console.warn(`[Airtable] Stock Status tidak dikenal: "${raw}", dianggap Sold Out.`);
+  if (val === "sold out" || val === "habis") {
+    return "Sold Out";
   }
+  console.warn(`[Airtable] Stock Status tidak dikenal: "${raw}", dianggap Sold Out.`);
   return "Sold Out";
 }
 
@@ -63,6 +65,7 @@ function mapProduct(record: { id: string; fields: Record<string, unknown> }): Pr
     description: getString(f, PRODUCT_FIELDS.description),
     storeNotes: getString(f, PRODUCT_FIELDS.storeNotes),
     shippingInfo: getString(f, PRODUCT_FIELDS.shippingInfo),
+    addedAt: getString(f, PRODUCT_FIELDS.addedAt),
   };
 }
 

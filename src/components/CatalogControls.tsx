@@ -36,7 +36,7 @@ export default function CatalogControls({
 
   const handleSortChange = (newSort: string) => {
     const params = new URLSearchParams(searchParams.toString());
-    if (newSort && newSort !== "terbaru") {
+    if (newSort) {
       params.set("sort", newSort);
     } else {
       params.delete("sort");
