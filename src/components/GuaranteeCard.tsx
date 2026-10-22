@@ -11,9 +11,9 @@ interface GuaranteeCardProps {
 export default function GuaranteeCard({ className = "" }: GuaranteeCardProps) {
   return (
     <div
-      className={`bg-white border-2 border-brand-blue rounded-xl p-4 flex items-start gap-3 ${className}`}
+      className={`bg-white border-2 border-brand-blue rounded-xl p-3.5 sm:p-4 flex items-center gap-3 ${className}`}
     >
-      <div className="shrink-0 text-brand-orange mt-0.5">
+      <div className="shrink-0 text-brand-orange">
         <RiVerifiedBadgeLine className="w-6 h-6 text-brand-orange" aria-hidden="true" />
       </div>
       <div className="flex flex-col">

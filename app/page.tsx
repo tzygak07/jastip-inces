@@ -6,9 +6,7 @@ import type { Batch, Product } from "@/src/lib/airtable/types";
 
 import BatchBanner from "@/src/components/BatchBanner";
 import BatchSwitcher from "@/src/components/BatchSwitcher";
-import CategoryFilter from "@/src/components/CategoryFilter";
-import CatalogControls from "@/src/components/CatalogControls";
-import ProductGrid from "@/src/components/ProductGrid";
+import CatalogSection from "@/src/components/CatalogSection";
 import CustomRequestBox from "@/src/components/CustomRequestBox";
 
 interface HomePageProps {
@@ -59,53 +57,10 @@ export default async function HomePage(props: HomePageProps) {
     ? getEffectiveStatus(activeBatch) === "Closed"
     : false;
 
-  // Filter barang per batch
-  let displayedProducts = activeBatch
+  // Barang untuk batch aktif (kategori, pencarian, dan sortir diproses di sisi klien secara instan)
+  const batchProducts = activeBatch
     ? allProducts.filter((p) => p.batchId === activeBatch.id)
     : allProducts;
-
-  // Filter per kategori
-  if (categoryParam && categoryParam.toLowerCase() !== "semua") {
-    displayedProducts = displayedProducts.filter(
-      (p) => p.category?.toLowerCase() === categoryParam.toLowerCase()
-    );
-  }
-
-  // Filter pencarian
-  if (queryParam) {
-    displayedProducts = displayedProducts.filter((p) => {
-      const matchName = p.name.toLowerCase().includes(queryParam);
-      const matchBrand = p.brand?.toLowerCase().includes(queryParam) ?? false;
-      const matchCat = p.category?.toLowerCase().includes(queryParam) ?? false;
-      return matchName || matchBrand || matchCat;
-    });
-  }
-
-  // Pengurutan
-  if (sortParam === "murah") {
-    displayedProducts = [...displayedProducts].sort(
-      (a, b) => (a.price ?? Infinity) - (b.price ?? Infinity)
-    );
-  } else if (sortParam === "mahal") {
-    displayedProducts = [...displayedProducts].sort(
-      (a, b) => (b.price ?? 0) - (a.price ?? 0)
-    );
-  } else {
-    // Default / "terbaru": paling baru di atas berdasarkan addedAt
-    displayedProducts = [...displayedProducts].sort((a, b) => {
-      if (a.addedAt && b.addedAt) {
-        const timeA = new Date(a.addedAt).getTime();
-        const timeB = new Date(b.addedAt).getTime();
-        if (!isNaN(timeA) && !isNaN(timeB) && timeB !== timeA) {
-          return timeB - timeA;
-        }
-        return 0; // Waktu sama -> pertahankan urutan record asli Airtable
-      }
-      if (a.addedAt && !b.addedAt) return -1; // Ada addedAt di atas
-      if (!a.addedAt && b.addedAt) return 1;  // Tanpa addedAt di bawah
-      return 0; // Keduanya tanpa addedAt -> pertahankan urutan record asli Airtable
-    });
-  }
 
   return (
     <div className="flex flex-col w-full">
@@ -157,81 +112,15 @@ export default async function HomePage(props: HomePageProps) {
               />
             ) : null}
 
-            {/* CATEGORY FILTER */}
-            <CategoryFilter
-              currentCategory={categoryParam}
-              batchId={activeBatch?.id}
-              searchQuery={queryParam}
-              currentSort={sortParam}
-            />
-
-            {/* SEARCH & SORT TOOLBAR */}
-            <CatalogControls
+            {/* INTERACTIVE CATALOG SECTION (Kategori, Cari, Urutkan, & Grid) */}
+            <CatalogSection
+              products={batchProducts}
+              batchName={activeBatch?.name ?? "Katalog"}
+              isBatchClosed={isBatchClosed}
+              initialCategory={categoryParam}
               initialSearch={queryParam}
               initialSort={sortParam}
             />
-
-            {/* PRODUCT GRID CONTAINER */}
-            <div className="w-full">
-              {displayedProducts.length > 0 ? (
-                <ProductGrid
-                  key={`${activeBatch?.id ?? "all"}-${categoryParam ?? "all"}-${queryParam ?? ""}-${sortParam}`}
-                  products={displayedProducts}
-                  batchName={activeBatch?.name ?? "Katalog"}
-                  isBatchClosed={isBatchClosed}
-                />
-              ) : queryParam ? (
-                /* Pencarian Nihil */
-                <div className="w-full bg-white border-2 border-brand-blue rounded-xl p-8 sm:p-12 text-center flex flex-col items-center justify-center gap-3">
-                  <div className="w-12 h-12 rounded-full bg-brand-tint border-2 border-brand-blue flex items-center justify-center text-brand-blue">
-                    <svg
-                      className="w-6 h-6"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                  </div>
-                  <h3 className="font-heading text-base sm:text-lg text-brand-blue">
-                    Barang tidak ditemukan
-                  </h3>
-                  <p className="font-body text-xs sm:text-sm text-brand-blue/80 max-w-md">
-                    Tidak ada barang yang cocok dengan kata kunci &quot;{queryParam}&quot;.
-                  </p>
-                  <Link
-                    href={activeBatch ? `/?batch=${activeBatch.id}#product-catalog` : "/"}
-                    className="inline-flex items-center justify-center min-h-[44px] px-5 bg-brand-tint text-brand-blue font-bold text-xs sm:text-sm rounded-[10px] border-2 border-brand-blue mt-2"
-                  >
-                    Hapus pencarian
-                  </Link>
-                </div>
-              ) : (
-                /* Empty State Batch */
-                <div className="w-full bg-white border-2 border-brand-blue rounded-xl p-8 sm:p-12 text-center flex flex-col items-center justify-center gap-3">
-                  <div className="w-12 h-12 rounded-full bg-brand-tint border-2 border-brand-blue flex items-center justify-center text-brand-blue">
-                    <svg
-                      className="w-6 h-6"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <h3 className="font-heading text-base sm:text-lg text-brand-blue">
-                      Belum ada barang di batch ini.
-                    </h3>
-                    <p className="font-body text-xs sm:text-sm text-brand-blue/80 max-w-md">
-                      Coba pilih kategori lain atau request barang yang kamu mau lewat WhatsApp.
-                    </p>
-                  </div>
-                </div>
-              )}
-            </div>
 
             {/* CUSTOM REQUEST BOX */}
             <CustomRequestBox />

@@ -6,11 +6,19 @@ import { useTransition } from "react";
 interface CatalogControlsProps {
   initialSearch?: string;
   initialSort?: string;
+  searchQuery?: string;
+  onSearchChange?: (query: string) => void;
+  currentSort?: string;
+  onSortChange?: (sort: string) => void;
 }
 
 export default function CatalogControls({
   initialSearch = "",
   initialSort = "terbaru",
+  searchQuery,
+  onSearchChange,
+  currentSort,
+  onSortChange,
 }: CatalogControlsProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -19,6 +27,8 @@ export default function CatalogControls({
 
   const handleSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (onSearchChange) return; // mode terkontrol
+
     const formData = new FormData(e.currentTarget);
     const q = (formData.get("q") as string)?.trim() ?? "";
 
@@ -35,6 +45,11 @@ export default function CatalogControls({
   };
 
   const handleSortChange = (newSort: string) => {
+    if (onSortChange) {
+      onSortChange(newSort);
+      return;
+    }
+
     const params = new URLSearchParams(searchParams.toString());
     if (newSort) {
       params.set("sort", newSort);
@@ -46,6 +61,8 @@ export default function CatalogControls({
       router.push(`${pathname}?${params.toString()}#product-catalog`);
     });
   };
+
+  const isControlledSearch = typeof onSearchChange === "function";
 
   return (
     <div
@@ -79,7 +96,14 @@ export default function CatalogControls({
           id="search-input"
           name="q"
           type="search"
-          defaultValue={initialSearch}
+          {...(isControlledSearch
+            ? {
+                value: searchQuery ?? "",
+                onChange: (e) => onSearchChange(e.target.value),
+              }
+            : {
+                defaultValue: initialSearch,
+              })}
           placeholder="Cari barang di batch ini..."
           className="w-full min-h-[44px] pl-10 pr-4 bg-white text-brand-blue font-body text-sm border-2 border-brand-blue rounded-[10px] placeholder:text-brand-blue/50 focus:outline-none"
         />
@@ -103,7 +127,7 @@ export default function CatalogControls({
         <div className="relative">
           <select
             id="sort-select"
-            value={initialSort}
+            value={currentSort ?? initialSort}
             onChange={(e) => handleSortChange(e.target.value)}
             className="appearance-none min-h-[44px] pl-3.5 pr-8 bg-white text-brand-blue font-body text-xs sm:text-sm font-semibold border-2 border-brand-blue rounded-[10px] cursor-pointer focus:outline-none"
           >

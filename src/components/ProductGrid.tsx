@@ -19,6 +19,12 @@ export default function ProductGrid({
   isBatchClosed = false,
 }: ProductGridProps) {
   const [visibleCount, setVisibleCount] = useState(INITIAL_COUNT);
+  const [prevProducts, setPrevProducts] = useState(products);
+
+  if (products !== prevProducts) {
+    setPrevProducts(products);
+    setVisibleCount(INITIAL_COUNT);
+  }
 
   const displayedProducts = products.slice(0, visibleCount);
   const hasMore = visibleCount < products.length;
@@ -28,7 +34,7 @@ export default function ProductGrid({
   };
 
   return (
-    <div className="flex flex-col gap-6 w-full">
+    <div className="flex flex-col gap-6 w-full fade-in">
       {/* Grid 2 kolom di HP, 4 kolom di desktop per PAGES.md */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 w-full">
         {displayedProducts.map((product) => (

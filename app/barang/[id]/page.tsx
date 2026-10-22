@@ -145,20 +145,20 @@ export default async function ItemDetailPage(props: ItemDetailPageProps) {
             </span>
           </nav>
 
-          <div className="flex items-baseline gap-2 shrink-0">
-            <h1 className="font-heading font-extrabold text-lg sm:text-xl text-brand-blue tracking-tight">
+          <div className="flex flex-col items-start sm:items-end shrink-0">
+            <h1 className="font-heading font-extrabold text-lg sm:text-xl text-brand-blue tracking-tight leading-tight">
               ✦ Detail Barang ✦
             </h1>
-            <span className="font-body text-xs sm:text-sm text-brand-orange-text font-semibold hidden md:inline">
+            <span className="font-body text-xs sm:text-sm text-brand-orange-text font-semibold mt-0.5">
               You want it, we get it!
             </span>
           </div>
         </div>
 
         {/* Main Detail Grid (Desktop 2-Columns) */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 lg:gap-8 items-stretch">
           {/* Left Column: Image Gallery & Guarantee */}
-          <section className="md:col-span-5 flex flex-col gap-4">
+          <section className="md:col-span-5 flex flex-col justify-between gap-4">
             <PhotoGallery
               photos={photos}
               productName={product.name}
@@ -169,44 +169,46 @@ export default async function ItemDetailPage(props: ItemDetailPageProps) {
           </section>
 
           {/* Right Column: Product Detail & Order CTA */}
-          <section className="md:col-span-7 flex flex-col gap-4">
-            {/* Batch Banner compact if batch exists */}
-            {batch ? <BatchBanner batch={batch} variant="compact" /> : null}
+          <section className="md:col-span-7 flex flex-col justify-between gap-4">
+            <div className="flex flex-col gap-4">
+              {/* Batch Banner compact if batch exists */}
+              {batch ? <BatchBanner batch={batch} variant="compact" /> : null}
 
-            {/* Brand & Product Titles */}
-            <div className="flex flex-col">
-              <div className="flex items-center gap-2 font-body text-xs sm:text-sm flex-wrap">
-                {product.category ? (
-                  <span className="text-brand-orange-text font-semibold">
-                    {product.category}
-                  </span>
-                ) : null}
-                {product.category && product.brand ? (
-                  <span aria-hidden="true" className="text-brand-blue font-semibold">
-                    ·
-                  </span>
-                ) : null}
-                {product.brand ? (
-                  <span className="text-brand-blue/80 font-semibold">
-                    {product.brand}
-                  </span>
+              {/* Brand & Product Titles */}
+              <div className="flex flex-col">
+                <div className="flex items-center gap-2 font-body text-xs sm:text-sm flex-wrap">
+                  {product.category ? (
+                    <span className="text-brand-orange-text font-semibold">
+                      {product.category}
+                    </span>
+                  ) : null}
+                  {product.category && product.brand ? (
+                    <span aria-hidden="true" className="text-brand-blue font-semibold">
+                      ·
+                    </span>
+                  ) : null}
+                  {product.brand ? (
+                    <span className="text-brand-blue/80 font-semibold">
+                      {product.brand}
+                    </span>
+                  ) : null}
+                </div>
+
+                <h2 className="font-heading font-extrabold text-2xl sm:text-3xl text-brand-blue mt-1 leading-tight">
+                  {product.name}
+                </h2>
+
+                {product.price !== undefined ? (
+                  <div className="flex items-baseline gap-2 mt-2 flex-wrap">
+                    <span className="font-heading font-extrabold text-2xl sm:text-3xl text-brand-blue tracking-tight">
+                      {formatRupiah(product.price)}
+                    </span>
+                    <span className="font-body text-xs sm:text-sm text-brand-blue/70 font-normal">
+                      (Sudah termasuk tax belanja + fee jastip)
+                    </span>
+                  </div>
                 ) : null}
               </div>
-
-              <h2 className="font-heading font-extrabold text-2xl sm:text-3xl text-brand-blue mt-1 leading-tight">
-                {product.name}
-              </h2>
-
-              {product.price !== undefined ? (
-                <div className="flex items-baseline gap-2 mt-2 flex-wrap">
-                  <span className="font-heading font-extrabold text-2xl sm:text-3xl text-brand-blue tracking-tight">
-                    {formatRupiah(product.price)}
-                  </span>
-                  <span className="font-body text-xs sm:text-sm text-brand-blue/70 font-normal">
-                    (Sudah termasuk tax belanja + fee jastip)
-                  </span>
-                </div>
-              ) : null}
             </div>
 
             {/* Interactive Order Block */}

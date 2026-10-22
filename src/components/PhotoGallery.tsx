@@ -95,7 +95,7 @@ export default function PhotoGallery({
   return (
     <div className="flex flex-col gap-3 w-full">
       {/* Big Picture Frame with Stitched Dashed Stroke */}
-      <div className="relative bg-brand-tint rounded-xl border-2 border-dashed border-brand-blue aspect-square flex flex-col items-center justify-center p-4 text-center overflow-hidden">
+      <div className="relative bg-brand-tint rounded-xl border-2 border-dashed border-brand-blue aspect-[4/3] flex flex-col items-center justify-center p-4 text-center overflow-hidden">
         {currentPhoto ? (
           <Image
             src={cloudinaryUrl(currentPhoto, 800)}
@@ -107,11 +107,11 @@ export default function PhotoGallery({
             className="object-cover"
           />
         ) : (
-          <div className="flex flex-col items-center justify-center gap-2 p-4 text-center">
-            <div className="w-16 h-16 rounded-full bg-white border-2 border-brand-blue flex items-center justify-center text-brand-blue shadow-[2px_2px_0px_#0B3C91]">
+          <div className="flex flex-col items-center justify-center gap-1.5 p-3 text-center">
+            <div className="w-14 h-14 rounded-full bg-white border-2 border-brand-blue flex items-center justify-center text-brand-blue shadow-[2px_2px_0px_#0B3C91] mb-1">
               <svg
                 aria-hidden="true"
-                className="w-8 h-8 text-brand-blue"
+                className="w-7 h-7 text-brand-blue"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="2"

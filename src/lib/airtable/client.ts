@@ -39,8 +39,8 @@ export async function fetchAllRecords(
   tableId: string,
   params: Record<string, string> = {}
 ): Promise<AirtableRecord[]> {
-  const token = process.env.AIRTABLE_TOKEN;
-  const baseId = process.env.AIRTABLE_BASE_ID;
+  const token = process.env.AIRTABLE_TOKEN?.trim();
+  const baseId = process.env.AIRTABLE_BASE_ID?.trim();
 
   if (!token || !baseId) {
     throw new Error(
