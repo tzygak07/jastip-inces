@@ -95,7 +95,7 @@ export default function PhotoGallery({
   return (
     <div className="flex flex-col gap-3 w-full">
       {/* Big Picture Frame with Stitched Dashed Stroke */}
-      <div className="relative bg-brand-tint rounded-xl border-2 border-dashed border-brand-blue aspect-[4/3] flex flex-col items-center justify-center p-4 text-center overflow-hidden">
+      <div className="relative bg-brand-tint rounded-xl border-2 border-dashed border-brand-blue aspect-square flex flex-col items-center justify-center p-4 text-center overflow-hidden">
         {currentPhoto ? (
           <Image
             src={cloudinaryUrl(currentPhoto, 800)}

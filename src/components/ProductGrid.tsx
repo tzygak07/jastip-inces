@@ -34,7 +34,7 @@ export default function ProductGrid({
   };
 
   return (
-    <div className="flex flex-col gap-6 w-full fade-in">
+    <div className="flex flex-col gap-6 w-full">
       {/* Grid 2 kolom di HP, 4 kolom di desktop per PAGES.md */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 w-full">
         {displayedProducts.map((product) => (

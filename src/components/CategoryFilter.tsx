@@ -37,6 +37,7 @@ export default function CategoryFilter({
     width: 0,
     opacity: 0,
   });
+  const [isMounted, setIsMounted] = useState(false);
 
   // Hitung posisi dan lebar indikator aktif secara dinamis untuk animasi geser yang mulus
   useEffect(() => {
@@ -57,6 +58,7 @@ export default function CategoryFilter({
     };
 
     updateIndicator();
+    setIsMounted(true);
 
     // Pastikan posisi ter-update saat resize window
     window.addEventListener("resize", updateIndicator);
@@ -66,18 +68,18 @@ export default function CategoryFilter({
   return (
     <nav
       aria-label="Kategori Produk"
-      className="relative border-b-2 border-brand-blue pb-1 overflow-x-auto scrollbar-none"
+      className="relative border-b-2 border-brand-blue/20 pb-1 overflow-x-auto scrollbar-none"
     >
       <div
         ref={containerRef}
-        className="relative flex items-center gap-2 sm:gap-4 min-h-[44px]"
+        className="relative flex items-center gap-2 sm:gap-3 min-h-[44px]"
       >
         {ALL_CATEGORIES.map((cat) => {
           const isSelected = activeCat.toLowerCase() === cat.toLowerCase();
 
-          const buttonClass = `relative font-body text-xs sm:text-sm whitespace-nowrap min-h-[44px] px-2.5 sm:px-3 flex items-center transition-all duration-200 ease-out focus-visible:outline-none rounded-md select-none ${
+          const buttonClass = `relative font-body text-xs sm:text-sm whitespace-nowrap min-h-[44px] px-3 sm:px-3.5 flex items-center transition-all duration-200 ease-out focus-visible:outline-none rounded-md select-none cursor-pointer ${
             isSelected
-              ? "text-brand-blue font-bold scale-[1.02]"
+              ? "text-brand-blue font-bold"
               : "text-brand-blue/70 hover:text-brand-blue font-semibold hover:bg-brand-tint/60"
           } active:scale-95`;
 
@@ -115,10 +117,12 @@ export default function CategoryFilter({
           );
         })}
 
-        {/* Indikator geser (sliding underline) yang mulus dan responsif */}
+        {/* Indikator geser (sliding underline) yang bergeser dan menyesuaikan lebar tombol secara mulus */}
         <span
           aria-hidden="true"
-          className="absolute -bottom-1 h-[2.5px] bg-brand-blue rounded-full transition-all duration-300 ease-out pointer-events-none"
+          className={`absolute -bottom-1 h-[3.5px] bg-brand-blue rounded-full pointer-events-none z-10 ${
+            isMounted ? "transition-all duration-300 ease-out" : ""
+          }`}
           style={{
             transform: `translateX(${indicatorStyle.left}px)`,
             width: `${indicatorStyle.width}px`,
