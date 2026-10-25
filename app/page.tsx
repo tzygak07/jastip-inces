@@ -1,4 +1,3 @@
-import { connection } from "next/server";
 import Link from "next/link";
 import { getBatches, getEffectiveStatus } from "@/src/lib/airtable/batches";
 import { getProducts } from "@/src/lib/airtable/products";
@@ -8,6 +7,8 @@ import BatchBanner from "@/src/components/BatchBanner";
 import BatchSwitcher from "@/src/components/BatchSwitcher";
 import CatalogSection from "@/src/components/CatalogSection";
 import CustomRequestBox from "@/src/components/CustomRequestBox";
+
+export const revalidate = 21600; // harus sama dengan AIRTABLE_REVALIDATE_SECONDS di client.ts
 
 interface HomePageProps {
   searchParams: Promise<{
@@ -19,8 +20,6 @@ interface HomePageProps {
 }
 
 export default async function HomePage(props: HomePageProps) {
-  await connection(); // render per-request, bukan prerender
-
   const searchParams = await props.searchParams;
   const batchParam = searchParams.batch;
   const categoryParam = searchParams.kategori;

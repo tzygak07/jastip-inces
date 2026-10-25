@@ -1,5 +1,4 @@
 import { notFound } from "next/navigation";
-import { connection } from "next/server";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getProductById } from "@/src/lib/airtable/products";
@@ -10,6 +9,8 @@ import BatchBanner from "@/src/components/BatchBanner";
 import GuaranteeCard from "@/src/components/GuaranteeCard";
 import ProductOrderSection from "@/src/components/ProductOrderSection";
 import Tabs, { TabItem } from "@/src/components/Tabs";
+
+export const revalidate = 21600; // harus sama dengan AIRTABLE_REVALIDATE_SECONDS di client.ts
 
 interface ItemDetailPageProps {
   params: Promise<{ id: string }>;
@@ -42,7 +43,6 @@ export async function generateMetadata(
 }
 
 export default async function ItemDetailPage(props: ItemDetailPageProps) {
-  await connection();
   const { id } = await props.params;
 
   const product = await getProductById(id);

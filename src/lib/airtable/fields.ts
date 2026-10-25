@@ -22,6 +22,7 @@ export const PRODUCT_FIELDS = {
   price: "Harga",
   category: "Kategori",
   batch: "Batch",
+  photoAttachments: "Foto",
   photoUrl: "Foto URL",
   photoUrl2: "Foto URL 2",
   photoUrl3: "Foto URL 3",

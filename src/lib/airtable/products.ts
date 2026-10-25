@@ -43,12 +43,32 @@ function splitVariants(raw: string | undefined): string[] {
 function mapProduct(record: { id: string; fields: Record<string, unknown> }): Product {
   const f = record.fields;
 
-  // Kumpulkan foto tambahan (URL 2–4) yang tidak kosong
-  const extraPhotos = [
-    getString(f, PRODUCT_FIELDS.photoUrl2),
-    getString(f, PRODUCT_FIELDS.photoUrl3),
-    getString(f, PRODUCT_FIELDS.photoUrl4),
-  ].filter((url): url is string => url !== undefined);
+  // Baca field Foto (attachment Airtable)
+  const rawAttachments = f[PRODUCT_FIELDS.photoAttachments];
+  let photoUrl: string | undefined;
+  let photoUrls: string[] = [];
+
+  if (Array.isArray(rawAttachments) && rawAttachments.length > 0) {
+    const first = rawAttachments[0];
+    if (
+      typeof first === "object" &&
+      first !== null &&
+      typeof (first as { id?: unknown }).id === "string"
+    ) {
+      // Tampilkan satu foto (attachment pertama) via proxy gambar aman
+      photoUrl = `/api/image/${record.id}/${(first as { id: string }).id}`;
+    }
+  }
+
+  // Fallback ke Cloudinary jika Foto attachment belum diisi
+  if (!photoUrl) {
+    photoUrl = getString(f, PRODUCT_FIELDS.photoUrl);
+    photoUrls = [
+      getString(f, PRODUCT_FIELDS.photoUrl2),
+      getString(f, PRODUCT_FIELDS.photoUrl3),
+      getString(f, PRODUCT_FIELDS.photoUrl4),
+    ].filter((url): url is string => url !== undefined);
+  }
 
   return {
     id: record.id,
@@ -57,8 +77,8 @@ function mapProduct(record: { id: string; fields: Record<string, unknown> }): Pr
     price: getNumber(f, PRODUCT_FIELDS.price),
     category: mapCategory(getString(f, PRODUCT_FIELDS.category)),
     batchId: getFirstLinkId(f, PRODUCT_FIELDS.batch),
-    photoUrl: getString(f, PRODUCT_FIELDS.photoUrl),
-    photoUrls: extraPhotos,
+    photoUrl,
+    photoUrls,
     variants: splitVariants(getString(f, PRODUCT_FIELDS.variants)),
     stock: mapStock(getString(f, PRODUCT_FIELDS.stock)),
     estWeight: getString(f, PRODUCT_FIELDS.estWeight),
