@@ -77,11 +77,10 @@ export default function CategoryFilter({
         {ALL_CATEGORIES.map((cat) => {
           const isSelected = activeCat.toLowerCase() === cat.toLowerCase();
 
-          const buttonClass = `relative font-body text-xs sm:text-sm whitespace-nowrap min-h-[44px] px-3 sm:px-3.5 flex items-center transition-all duration-200 ease-out focus-visible:outline-none rounded-md select-none cursor-pointer ${
-            isSelected
-              ? "text-brand-blue font-bold"
-              : "text-brand-blue/70 hover:text-brand-blue font-semibold hover:bg-brand-tint/60"
-          } active:scale-95`;
+          const buttonClass = `relative font-body text-xs sm:text-sm whitespace-nowrap min-h-[44px] px-3 sm:px-3.5 flex items-center transition-all duration-200 ease-out focus-visible:outline-none rounded-md select-none cursor-pointer ${isSelected
+              ? "text-brand-blue text-btn"
+              : "text-brand-blue/70 hover:text-brand-blue text-label hover:bg-brand-tint/60"
+            } active:scale-95`;
 
           if (onSelectCategory) {
             return (
@@ -120,9 +119,8 @@ export default function CategoryFilter({
         {/* Indikator geser (sliding underline) yang bergeser dan menyesuaikan lebar tombol secara mulus */}
         <span
           aria-hidden="true"
-          className={`absolute -bottom-1 h-[3.5px] bg-brand-blue rounded-full pointer-events-none z-10 ${
-            isMounted ? "transition-all duration-300 ease-out" : ""
-          }`}
+          className={`absolute -bottom-1 h-[3.5px] bg-brand-blue rounded-full pointer-events-none z-10 ${isMounted ? "transition-all duration-300 ease-out" : ""
+            }`}
           style={{
             transform: `translateX(${indicatorStyle.left}px)`,
             width: `${indicatorStyle.width}px`,

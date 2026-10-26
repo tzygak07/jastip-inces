@@ -82,7 +82,7 @@ export default function Tabs({
               onKeyDown={(e) => handleKeyDown(e, idx)}
               className={`px-4 sm:px-6 py-2.5 font-heading text-xs sm:text-sm whitespace-nowrap min-h-[44px] flex items-center justify-center transition-colors border-r-2 border-brand-blue last:border-r-0 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-orange ${
                 isSelected
-                  ? "bg-white text-brand-blue font-bold"
+                  ? "bg-white text-brand-blue text-btn"
                   : "text-brand-blue/70 hover:text-brand-blue hover:bg-white/70 font-normal"
               }`}
             >

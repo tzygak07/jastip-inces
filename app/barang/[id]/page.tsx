@@ -113,7 +113,7 @@ export default async function ItemDetailPage(props: ItemDetailPageProps) {
           >
             <Link
               href="/"
-              className="hover:underline min-h-[44px] inline-flex items-center font-semibold"
+              className="hover:underline min-h-[44px] inline-flex items-center text-label"
             >
               Katalog
             </Link>
@@ -124,7 +124,7 @@ export default async function ItemDetailPage(props: ItemDetailPageProps) {
               <>
                 <Link
                   href={`/?batch=${batch.id}#product-catalog`}
-                  className="hover:underline min-h-[44px] inline-flex items-center font-semibold"
+                  className="hover:underline min-h-[44px] inline-flex items-center text-label"
                 >
                   {batch.name}
                 </Link>
@@ -137,7 +137,7 @@ export default async function ItemDetailPage(props: ItemDetailPageProps) {
               </>
             ) : null}
             <span
-              className="font-semibold truncate max-w-[180px] sm:max-w-xs md:max-w-md inline-flex items-center min-h-[44px]"
+              className="font-semibold truncate max-w-[130px] sm:max-w-xs md:max-w-md inline-flex items-center min-h-[44px]"
               aria-current="page"
               title={product.name}
             >
@@ -146,10 +146,10 @@ export default async function ItemDetailPage(props: ItemDetailPageProps) {
           </nav>
 
           <div className="flex flex-col items-start sm:items-end shrink-0">
-            <h1 className="font-heading font-extrabold text-lg sm:text-xl text-brand-blue tracking-tight leading-tight">
+            <h1 className="text-display text-lg sm:text-xl text-brand-blue tracking-tight leading-tight">
               ✦ Detail Barang ✦
             </h1>
-            <span className="font-body text-xs sm:text-sm text-brand-orange-text font-semibold mt-0.5">
+            <span className="font-body text-xs sm:text-sm text-brand-orange-text text-label mt-0.5">
               You want it, we get it!
             </span>
           </div>
@@ -177,29 +177,29 @@ export default async function ItemDetailPage(props: ItemDetailPageProps) {
             <div className="flex flex-col">
               <div className="flex items-center gap-2 font-body text-xs sm:text-sm flex-wrap">
                 {product.category ? (
-                  <span className="text-brand-orange-text font-semibold">
+                  <span className="text-brand-orange-text text-label">
                     {product.category}
                   </span>
                 ) : null}
                 {product.category && product.brand ? (
-                  <span aria-hidden="true" className="text-brand-blue font-semibold">
+                  <span aria-hidden="true" className="text-brand-blue text-label">
                     ·
                   </span>
                 ) : null}
                 {product.brand ? (
-                  <span className="text-brand-blue/80 font-semibold">
+                  <span className="text-brand-blue/80 text-label">
                     {product.brand}
                   </span>
                 ) : null}
               </div>
 
-              <h2 className="font-heading font-extrabold text-2xl sm:text-3xl text-brand-blue mt-1 leading-tight">
+              <h2 className="text-display text-2xl sm:text-3xl text-brand-blue mt-1 leading-tight">
                 {product.name}
               </h2>
 
               {product.price !== undefined ? (
                 <div className="flex items-baseline gap-2 mt-2 flex-wrap">
-                  <span className="font-heading font-extrabold text-2xl sm:text-3xl text-brand-blue tracking-tight">
+                  <span className="text-display text-2xl sm:text-3xl text-brand-blue tracking-tight">
                     {formatRupiah(product.price)}
                   </span>
                   <span className="font-body text-xs sm:text-sm text-brand-blue/70 font-normal">

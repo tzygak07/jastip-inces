@@ -37,7 +37,7 @@ function VariantOption({
         />
         <span
           className={`font-body text-xs sm:text-sm ${
-            isSelected ? "font-bold" : "font-normal"
+            isSelected ? "text-btn" : "font-normal"
           }`}
         >
           {variant}
@@ -64,7 +64,7 @@ export default function VariantPicker({
 
   return (
     <fieldset className="flex flex-col gap-2 pt-2 border-t-2 border-brand-blue">
-      <legend className="font-heading text-xs sm:text-sm text-brand-blue font-bold mb-1">
+      <legend className="text-heading text-xs sm:text-sm text-brand-blue mb-1">
         Pilih Varian:
       </legend>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">

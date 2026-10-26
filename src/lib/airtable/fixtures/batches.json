@@ -1,0 +1,43 @@
+[
+  {
+    "id": "rec4Z295NFNyZlquU",
+    "createdTime": "2026-10-21T05:10:38.000Z",
+    "fields": {
+      "Nama Batch": "Batch 1",
+      "Tanggal Buka": "2026-10-23",
+      "Tanggal Tutup": "2026-10-24",
+      "Catatan": "nice",
+      "Publikasikan katalog": {
+        "label": "Publikasikan katalog",
+        "url": "https://jastip-inces.vercel.app/api/revalidate?secret=<17363bd1f4b211111d2cf2f5565e04decabeca85506db6048028b3b7084e6756>"
+      },
+      "Products": [
+        "recPjn5aiWEEws8Md",
+        "recIfBOUqNhfHpn74"
+      ],
+      "Negara Tujuan": "Amerika",
+      "Estimasi Tiba": "2026-10-31",
+      "Status": "Open"
+    }
+  },
+  {
+    "id": "rec8jlQtEugt9CAzj",
+    "createdTime": "2026-10-22T15:17:05.000Z",
+    "fields": {
+      "Nama Batch": "Batch 2",
+      "Tanggal Buka": "2026-10-20",
+      "Tanggal Tutup": "2026-10-21",
+      "Catatan": "aduh tutup",
+      "Publikasikan katalog": {
+        "label": "Publikasikan katalog",
+        "url": "https://jastip-inces.vercel.app/api/revalidate?secret=<17363bd1f4b211111d2cf2f5565e04decabeca85506db6048028b3b7084e6756>"
+      },
+      "Products": [
+        "recLzi6Dn5V1gf3rT"
+      ],
+      "Negara Tujuan": "Korea",
+      "Estimasi Tiba": "2026-10-23",
+      "Status": "Closed"
+    }
+  }
+]

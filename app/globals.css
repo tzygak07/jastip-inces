@@ -50,6 +50,7 @@ body {
   flex-direction: column;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
 h1,
@@ -137,5 +138,41 @@ textarea:focus-visible {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* =====================================================
+   CLASS TIPOGRAFI TERPUSAT — satu sumber kebenaran
+   Bobot font sesuai tabel di DESIGN.md
+   ===================================================== */
+@layer components {
+  /* Body, deskripsi, catatan, teks bantu → Nunito Sans 400 */
+  .text-body {
+    font-family: var(--font-body);
+    font-weight: 400;
+  }
+
+  /* Label, nama merek, kategori, link navigasi → Nunito Sans 600 */
+  .text-label {
+    font-family: var(--font-body);
+    font-weight: 600;
+  }
+
+  /* Judul bagian, judul tab → Rubik 700 */
+  .text-heading {
+    font-family: var(--font-heading);
+    font-weight: 700;
+  }
+
+  /* H1, nama barang, harga → Rubik 800 */
+  .text-display {
+    font-family: var(--font-heading);
+    font-weight: 800;
+  }
+
+  /* Teks tombol utama, badge status, opsi terpilih → Nunito Sans 700 */
+  .text-btn {
+    font-family: var(--font-body);
+    font-weight: 700;
   }
 }

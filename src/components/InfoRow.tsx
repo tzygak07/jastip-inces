@@ -25,7 +25,7 @@ export default function InfoRow({
         <span className="font-body text-xs text-brand-blue/80 font-normal">
           {label}:
         </span>
-        <span className="font-body text-xs sm:text-sm text-brand-blue font-semibold">
+        <span className="font-body text-xs sm:text-sm text-brand-blue text-label">
           {value}
         </span>
       </div>

@@ -14,7 +14,7 @@ export default function Footer() {
 
   return (
     <footer className="w-full bg-white border-t-2 border-brand-blue py-4 mt-auto">
-      <div className="max-w-[1120px] mx-auto px-4 sm:px-6 flex flex-wrap items-center justify-between gap-4 min-h-[44px]">
+      <div className="max-w-[1120px] mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left min-h-[44px]">
         {/* Logo & Copyright */}
         <div className="flex items-center gap-2.5">
           <div className="relative w-7 h-7 rounded-full overflow-hidden border-2 border-brand-blue shrink-0 bg-white">
@@ -26,7 +26,7 @@ export default function Footer() {
               className="object-cover"
             />
           </div>
-          <span className="font-body text-xs sm:text-sm text-brand-blue font-semibold">
+          <span className="font-body text-xs sm:text-sm text-brand-blue text-label">
             © {currentYear} Jastip Nces Dong
           </span>
         </div>
@@ -40,7 +40,7 @@ export default function Footer() {
                   href={item.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:underline min-h-[44px] inline-flex items-center font-medium"
+                  className="hover:underline min-h-[44px] inline-flex items-center text-label"
                 >
                   {item.name}
                 </a>

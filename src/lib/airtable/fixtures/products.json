@@ -1,0 +1,62 @@
+[
+  {
+    "id": "recIfBOUqNhfHpn74",
+    "createdTime": "2026-10-21T05:10:46.000Z",
+    "fields": {
+      "Kategori": "Skincare",
+      "Stock Status": "Available",
+      "Varian": "Varian 1\nVarian 2",
+      "Info Pengiriman": "Info pengiriman contoh.",
+      "Catatan Toko": "Catatan toko contoh.",
+      "Ditambahkan": "2026-10-21T05:10:46.000Z",
+      "Deskripsi": "Deskripsi contoh (data palsu untuk testing).",
+      "Merek": "[Contoh] Merek",
+      "Est. Berat": "1 kg",
+      "Batch": [
+        "rec4Z295NFNyZlquU"
+      ],
+      "Harga": 200000,
+      "Nama Barang": "[Contoh] Barang B"
+    }
+  },
+  {
+    "id": "recLzi6Dn5V1gf3rT",
+    "createdTime": "2026-10-21T05:10:46.000Z",
+    "fields": {
+      "Kategori": "Food",
+      "Stock Status": "Sold Out",
+      "Varian": "Varian 1\nVarian 2",
+      "Info Pengiriman": "Info pengiriman contoh.",
+      "Catatan Toko": "Catatan toko contoh.",
+      "Ditambahkan": "2026-10-21T05:10:46.000Z",
+      "Deskripsi": "Deskripsi contoh (data palsu untuk testing).",
+      "Merek": "[Contoh] Merek",
+      "Est. Berat": "0.3 kg",
+      "Batch": [
+        "rec8jlQtEugt9CAzj"
+      ],
+      "Harga": 300000,
+      "Nama Barang": "[Contoh] Barang C"
+    }
+  },
+  {
+    "id": "recPjn5aiWEEws8Md",
+    "createdTime": "2026-10-21T05:10:46.000Z",
+    "fields": {
+      "Kategori": "Skincare",
+      "Stock Status": "Available",
+      "Varian": "Varian 1\nVarian 2",
+      "Info Pengiriman": "Info pengiriman contoh.",
+      "Catatan Toko": "Catatan toko contoh.",
+      "Ditambahkan": "2026-10-21T05:10:46.000Z",
+      "Deskripsi": "Deskripsi contoh (data palsu untuk testing).",
+      "Merek": "[Contoh] Merek",
+      "Est. Berat": "0.5 kg",
+      "Batch": [
+        "rec4Z295NFNyZlquU"
+      ],
+      "Harga": 100000,
+      "Nama Barang": "[Contoh] Barang A"
+    }
+  }
+]

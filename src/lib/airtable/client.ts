@@ -6,6 +6,8 @@
  * Sumber: ARCHITECTURE.md
  */
 
+import fs from "fs";
+import path from "path";
 import { unstable_cache } from "next/cache";
 
 const BASE_URL = "https://api.airtable.com/v0";
@@ -14,9 +16,86 @@ export const AIRTABLE_REVALIDATE_SECONDS = 21600; // 6 jam
 export const REVALIDATE_SECONDS = AIRTABLE_REVALIDATE_SECONDS; // alias mundur
 export const CACHE_TAG = "airtable";
 
+// ── Helper penanda log [dev] atau [prod] ──────────────────────────────────────
+export function getEnvTag(): "[dev]" | "[prod]" {
+  return process.env.NODE_ENV === "production" ? "[prod]" : "[dev]";
+}
+
+// ── Deteksi Mode Mock ─────────────────────────────────────────────────────────
+
+/**
+ * Mengecek apakah mode mock aktif.
+ * Mode mock hanya boleh aktif saat development lokal dengan AIRTABLE_MOCK=true.
+ * Variabel ini diproteksi agar TIDAK PERNAH aktif di Vercel maupun di production.
+ */
+export function isMockActive(): boolean {
+  const isVercel = Boolean(
+    process.env.VERCEL ||
+    process.env.VERCEL_ENV ||
+    process.env.NEXT_PUBLIC_VERCEL_ENV
+  );
+  const isProd = process.env.NODE_ENV === "production";
+
+  if (isVercel || isProd) {
+    if (process.env.AIRTABLE_MOCK === "true") {
+      const envTag = isProd ? "[prod]" : "[dev]";
+      console.warn(
+        `${envTag} [Airtable] AIRTABLE_MOCK diabaikan karena sistem berjalan di ${
+          isVercel ? "Vercel" : "lingkungan production"
+        }. Menggunakan data live Airtable.`
+      );
+    }
+    return false;
+  }
+
+  return process.env.AIRTABLE_MOCK === "true";
+}
+
+/**
+ * Membaca data fixture lokal dari src/lib/airtable/fixtures/*.json.
+ */
+function readFixtureRecords(tableId: string): AirtableRecord[] {
+  const fileName = `${tableId.toLowerCase()}.json`;
+  const filePath = path.join(process.cwd(), "src", "lib", "airtable", "fixtures", fileName);
+
+  if (!fs.existsSync(filePath)) {
+    const envTag = getEnvTag();
+    throw new Error(
+      `${envTag} [Airtable Mock] File fixture tidak ditemukan: "${filePath}". Pastikan file ${fileName} ada di src/lib/airtable/fixtures/.`
+    );
+  }
+
+  const raw = fs.readFileSync(filePath, "utf-8");
+  const parsed = JSON.parse(raw);
+  if (Array.isArray(parsed)) {
+    return parsed as AirtableRecord[];
+  }
+  if (parsed && Array.isArray((parsed as { records?: unknown }).records)) {
+    return (parsed as { records: AirtableRecord[] }).records;
+  }
+  const envTag = getEnvTag();
+  throw new Error(
+    `${envTag} [Airtable Mock] Format fixture "${fileName}" tidak valid. Harap sediakan array record Airtable.`
+  );
+}
+
+function logMockCall(tableId: string, recordId?: string) {
+  const envTag = getEnvTag();
+  if (recordId) {
+    console.log(
+      `${envTag} [Airtable Mock] Membaca record "${recordId}" pada tabel "${tableId}" dari fixtures/${tableId.toLowerCase()}.json`
+    );
+  } else {
+    console.log(
+      `${envTag} [Airtable Mock] Membaca data tabel "${tableId}" dari fixtures/${tableId.toLowerCase()}.json`
+    );
+  }
+}
+
 // ── Penghitung Panggilan API Bulanan (Server-only log) ─────────────────────────
 let currentMonthKey = "";
 let monthlyApiCallCount = 0;
+let devWorkspaceWarningShown = false;
 
 function trackApiCall(endpointLabel: string) {
   const now = new Date();
@@ -28,13 +107,21 @@ function trackApiCall(endpointLabel: string) {
   }
 
   monthlyApiCallCount++;
+  const envTag = getEnvTag();
   console.log(
-    `[Airtable API] Panggilan ke-${monthlyApiCallCount} bulan ini (${currentMonthKey}) [${endpointLabel}]`
+    `${envTag} [Airtable API] Panggilan ke-${monthlyApiCallCount} bulan ini (${currentMonthKey}) [${endpointLabel}]`
   );
+
+  if (process.env.NODE_ENV !== "production" && !devWorkspaceWarningShown) {
+    devWorkspaceWarningShown = true;
+    console.log(
+      `${envTag} [Airtable API] Catatan: Jika mock tidak dipakai saat development, pastikan token berasal dari workspace development terpisah agar kuota produksi tidak terpakai.`
+    );
+  }
 
   if (monthlyApiCallCount >= 800) {
     console.warn(
-      `[Airtable API] PERINGATAN: Jumlah panggilan API bulan ini telah mencapai ${monthlyApiCallCount}/1000 (mendekati batas kuota paket gratis Airtable).`
+      `${envTag} [Airtable API] PERINGATAN: Jumlah panggilan API bulan ini telah mencapai ${monthlyApiCallCount}/1000 (mendekati batas kuota paket gratis Airtable).`
     );
   }
 }
@@ -53,16 +140,14 @@ interface AirtableResponse {
 
 // ── Fungsi utama ──────────────────────────────────────────────────────────────
 
-async function fetchAllRecordsDirect(
-  tableId: string,
-  params: Record<string, string> = {}
-): Promise<AirtableRecord[]> {
+async function fetchAllRecordsDirect(tableId: string): Promise<AirtableRecord[]> {
   const token = process.env.AIRTABLE_TOKEN?.trim();
   const baseId = process.env.AIRTABLE_BASE_ID?.trim();
+  const envTag = getEnvTag();
 
   if (!token || !baseId) {
     throw new Error(
-      "[Airtable] AIRTABLE_TOKEN atau AIRTABLE_BASE_ID belum diisi di environment variable."
+      `${envTag} [Airtable] AIRTABLE_TOKEN atau AIRTABLE_BASE_ID belum diisi di environment variable.`
     );
   }
 
@@ -70,10 +155,11 @@ async function fetchAllRecordsDirect(
   let offset: string | undefined;
 
   do {
-    const searchParams = new URLSearchParams(params);
+    const searchParams = new URLSearchParams();
     if (offset) searchParams.set("offset", offset);
 
-    const url = `${BASE_URL}/${baseId}/${encodeURIComponent(tableId)}?${searchParams.toString()}`;
+    const query = searchParams.toString();
+    const url = `${BASE_URL}/${baseId}/${encodeURIComponent(tableId)}${query ? `?${query}` : ""}`;
 
     trackApiCall(`table: ${tableId}`);
 
@@ -90,7 +176,7 @@ async function fetchAllRecordsDirect(
     if (!res.ok) {
       const text = await res.text();
       throw new Error(
-        `[Airtable] Gagal fetch tabel "${tableId}": ${res.status} ${res.statusText} — ${text}`
+        `${envTag} [Airtable] Gagal fetch tabel "${tableId}": ${res.status} ${res.statusText} — ${text}`
       );
     }
 
@@ -103,9 +189,8 @@ async function fetchAllRecordsDirect(
 }
 
 const getCachedAllRecords = unstable_cache(
-  async (tableId: string, paramsJson: string): Promise<AirtableRecord[]> => {
-    const params = paramsJson ? (JSON.parse(paramsJson) as Record<string, string>) : {};
-    return fetchAllRecordsDirect(tableId, params);
+  async (tableId: string): Promise<AirtableRecord[]> => {
+    return fetchAllRecordsDirect(tableId);
   },
   ["airtable-all-records"],
   {
@@ -116,17 +201,20 @@ const getCachedAllRecords = unstable_cache(
 
 /**
  * Ambil semua record dari sebuah tabel Airtable.
- * Otomatis mengulang request jika ada offset (pagination).
- * Hasil dibungkus unstable_cache agar counter API tidak bertambah saat cache aktif.
+ * - Jika AIRTABLE_MOCK=true (dan bukan di Vercel), membaca data dari src/lib/airtable/fixtures/*.json
+ *   tanpa memanggil Airtable sama sekali.
+ * - Jika mock tidak aktif, memanggil Airtable via fetch dengan cache tag "airtable" dan pagination otomatis.
+ * - Tidak menyertakan batch, sort, atau kategori di URL Airtable.
  *
  * @param tableId - Nama atau ID tabel di Airtable
- * @param params  - Query param tambahan (misalnya sort, view)
  */
-export async function fetchAllRecords(
-  tableId: string,
-  params: Record<string, string> = {}
-): Promise<AirtableRecord[]> {
-  return getCachedAllRecords(tableId, JSON.stringify(params));
+export async function fetchAllRecords(tableId: string): Promise<AirtableRecord[]> {
+  if (isMockActive()) {
+    logMockCall(tableId);
+    return readFixtureRecords(tableId);
+  }
+
+  return getCachedAllRecords(tableId);
 }
 
 async function fetchRecordDirect(
@@ -136,10 +224,11 @@ async function fetchRecordDirect(
 ): Promise<AirtableRecord> {
   const token = process.env.AIRTABLE_TOKEN?.trim();
   const baseId = process.env.AIRTABLE_BASE_ID?.trim();
+  const envTag = getEnvTag();
 
   if (!token || !baseId) {
     throw new Error(
-      "[Airtable] AIRTABLE_TOKEN atau AIRTABLE_BASE_ID belum diisi di environment variable."
+      `${envTag} [Airtable] AIRTABLE_TOKEN atau AIRTABLE_BASE_ID belum diisi di environment variable.`
     );
   }
 
@@ -160,7 +249,7 @@ async function fetchRecordDirect(
   if (!res.ok) {
     const text = await res.text();
     throw new Error(
-      `[Airtable] Gagal fetch record "${recordId}" dari tabel "${tableId}": ${res.status} ${res.statusText} — ${text}`
+      `${envTag} [Airtable] Gagal fetch record "${recordId}" dari tabel "${tableId}": ${res.status} ${res.statusText} — ${text}`
     );
   }
 
@@ -180,6 +269,8 @@ const getCachedRecord = unstable_cache(
 
 /**
  * Ambil satu record dari sebuah tabel Airtable berdasarkan ID.
+ * - Jika AIRTABLE_MOCK=true (dan bukan di Vercel), membaca dari fixture lokal.
+ * - Jika mock tidak aktif, memanggil Airtable via fetch dengan cache tag "airtable".
  *
  * @param tableId - Nama atau ID tabel di Airtable
  * @param recordId - ID record (contoh: recXXXXX)
@@ -190,6 +281,19 @@ export async function fetchRecord(
   recordId: string,
   revalidateSeconds: number = AIRTABLE_REVALIDATE_SECONDS
 ): Promise<AirtableRecord> {
+  if (isMockActive()) {
+    logMockCall(tableId, recordId);
+    const records = readFixtureRecords(tableId);
+    const found = records.find((r) => r.id === recordId);
+    if (!found) {
+      const envTag = getEnvTag();
+      throw new Error(
+        `${envTag} [Airtable Mock] Record "${recordId}" tidak ditemukan di fixture tabel "${tableId}".`
+      );
+    }
+    return found;
+  }
+
   return getCachedRecord(tableId, recordId, revalidateSeconds);
 }
 

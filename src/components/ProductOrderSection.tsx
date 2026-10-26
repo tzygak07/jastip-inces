@@ -62,7 +62,7 @@ export default function ProductOrderSection({
           <button
             type="button"
             disabled
-            className="w-full min-h-[52px] bg-brand-tint text-brand-blue opacity-70 cursor-not-allowed font-heading text-base font-bold rounded-[10px] border-2 border-brand-blue flex items-center justify-center gap-2"
+            className="w-full min-h-[52px] bg-brand-tint text-brand-blue opacity-70 cursor-not-allowed text-btn text-base rounded-[10px] border-2 border-brand-blue flex items-center justify-center gap-2"
           >
             <svg
               aria-hidden="true"
@@ -84,7 +84,7 @@ export default function ProductOrderSection({
           <button
             type="button"
             disabled
-            className="w-full min-h-[52px] bg-brand-tint text-brand-blue opacity-70 cursor-not-allowed font-heading text-base font-bold rounded-[10px] border-2 border-brand-blue flex items-center justify-center gap-2"
+            className="w-full min-h-[52px] bg-brand-tint text-brand-blue opacity-70 cursor-not-allowed text-btn text-base rounded-[10px] border-2 border-brand-blue flex items-center justify-center gap-2"
           >
             <span>Stok Habis</span>
           </button>
@@ -93,7 +93,7 @@ export default function ProductOrderSection({
             href={waLink}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full min-h-[52px] bg-brand-orange hover:bg-brand-orange-text text-white font-heading text-base sm:text-lg font-bold rounded-[10px] border-2 border-brand-blue flex items-center justify-center gap-2.5 shadow-[2px_2px_0px_#0B3C91] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none btn-hover transition-all text-center px-4"
+            className="w-full min-h-[52px] bg-brand-orange hover:bg-brand-orange-text text-white text-btn text-base sm:text-lg rounded-[10px] border-2 border-brand-blue flex items-center justify-center gap-2.5 shadow-[2px_2px_0px_#0B3C91] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none btn-hover transition-all text-center px-4"
           >
             <svg
               aria-hidden="true"
@@ -112,7 +112,7 @@ export default function ProductOrderSection({
             <span>Pesan lewat WhatsApp</span>
           </a>
         ) : (
-          <div className="w-full min-h-[52px] bg-brand-tint text-brand-blue font-bold rounded-[10px] border-2 border-brand-blue flex items-center justify-center text-xs sm:text-sm text-center px-4">
+          <div className="w-full min-h-[52px] bg-brand-tint text-brand-blue text-body rounded-[10px] border-2 border-brand-blue flex items-center justify-center text-xs sm:text-sm text-center px-4">
             Nomor WhatsApp pemesanan belum dikonfigurasi.
           </div>
         )}

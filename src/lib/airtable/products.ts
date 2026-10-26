@@ -3,7 +3,8 @@
  * Sumber: AIRTABLE-SCHEMA.md, ARCHITECTURE.md
  */
 
-import { fetchAllRecords, getString, getNumber, getFirstLinkId } from "./client";
+import { cache } from "react";
+import { fetchAllRecords, getString, getNumber, getFirstLinkId, getEnvTag } from "./client";
 import { PRODUCT_FIELDS } from "./fields";
 import type { Product, StockStatus, Category } from "./types";
 
@@ -20,7 +21,8 @@ function mapStock(raw: string | undefined): StockStatus {
   if (val === "sold out" || val === "habis") {
     return "Sold Out";
   }
-  console.warn(`[Airtable] Stock Status tidak dikenal: "${raw}", dianggap Sold Out.`);
+  const envTag = getEnvTag();
+  console.warn(`${envTag} [Airtable] Stock Status tidak dikenal: "${raw}", dianggap Sold Out.`);
   return "Sold Out";
 }
 
@@ -89,19 +91,23 @@ function mapProduct(record: { id: string; fields: Record<string, unknown> }): Pr
   };
 }
 
-/** Ambil semua produk. */
-export async function getProducts(): Promise<Product[]> {
+/**
+ * Ambil semua produk.
+ * - URL Airtable bersih tanpa kategori/sort/batch.
+ * - Data di-cache per refresh dengan tag "airtable".
+ */
+export const getProducts = cache(async (): Promise<Product[]> => {
   const records = await fetchAllRecords("Products");
   return records.map(mapProduct);
-}
+});
 
-/** Ambil produk yang terhubung ke satu batch. */
+/** Ambil produk yang terhubung ke satu batch (difilter di server memori). */
 export async function getProductsByBatch(batchId: string): Promise<Product[]> {
   const all = await getProducts();
   return all.filter((p) => p.batchId === batchId);
 }
 
-/** Ambil satu produk berdasarkan ID. Kembalikan undefined jika tidak ada. */
+/** Ambil satu produk berdasarkan ID (difilter di server memori). Kembalikan undefined jika tidak ada. */
 export async function getProductById(id: string): Promise<Product | undefined> {
   const all = await getProducts();
   return all.find((p) => p.id === id);

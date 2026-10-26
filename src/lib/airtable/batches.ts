@@ -3,7 +3,8 @@
  * Sumber: AIRTABLE-SCHEMA.md, ARCHITECTURE.md
  */
 
-import { fetchAllRecords, getString } from "./client";
+import { cache } from "react";
+import { fetchAllRecords, getString, getEnvTag } from "./client";
 import { BATCH_FIELDS } from "./fields";
 import type { Batch, BatchStatus } from "./types";
 
@@ -15,7 +16,8 @@ function mapStatus(raw: string | undefined): BatchStatus {
   }
   // Nilai tidak dikenal → paling aman: Closed
   if (raw) {
-    console.warn(`[Airtable] Status batch tidak dikenal: "${raw}", dianggap Closed.`);
+    const envTag = getEnvTag();
+    console.warn(`${envTag} [Airtable] Status batch tidak dikenal: "${raw}", dianggap Closed.`);
   }
   return "Closed";
 }
@@ -50,14 +52,20 @@ export function getEffectiveStatus(batch: Batch, nowMs: number = Date.now()): Ba
   return "Open";
 }
 
-/** Ambil semua batch. */
-export async function getBatches(): Promise<Batch[]> {
-  const records = await fetchAllRecords("Batches", {
-    "sort[0][field]": BATCH_FIELDS.openDate,
-    "sort[0][direction]": "desc",
+/**
+ * Ambil semua batch.
+ * - URL Airtable bersih tanpa sort/filter.
+ * - Data di-cache per refresh dan diurutkan berdasarkan openDate descending di server.
+ */
+export const getBatches = cache(async (): Promise<Batch[]> => {
+  const records = await fetchAllRecords("Batches");
+  const batches = records.map(mapBatch);
+  return batches.sort((a, b) => {
+    const timeA = a.openDate ? new Date(a.openDate).getTime() : 0;
+    const timeB = b.openDate ? new Date(b.openDate).getTime() : 0;
+    return timeB - timeA;
   });
-  return records.map(mapBatch);
-}
+});
 
 /** Ambil satu batch berdasarkan ID. Kembalikan undefined jika tidak ada. */
 export async function getBatchById(id: string): Promise<Batch | undefined> {

@@ -1,5 +1,5 @@
 import { unstable_cache } from "next/cache";
-import { fetchRecord } from "./client";
+import { fetchRecord, getEnvTag } from "./client";
 import { PRODUCT_FIELDS } from "./fields";
 
 export interface CachedAttachment {
@@ -54,7 +54,8 @@ export const getRecordAttachments = unstable_cache(
 
       return attachmentsMap;
     } catch (err) {
-      console.error(`[Airtable] Gagal memuat attachment record ${recordId}:`, err);
+      const envTag = getEnvTag();
+      console.error(`${envTag} [Airtable] Gagal memuat attachment record ${recordId}:`, err);
       return {};
     }
   },

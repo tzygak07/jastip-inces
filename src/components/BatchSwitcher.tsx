@@ -21,7 +21,7 @@ export default function BatchSwitcher({
 
   return (
     <nav aria-label="Pemilih Batch" className="flex flex-col gap-1.5">
-      <span className="font-heading text-xs text-brand-blue font-bold">
+      <span className="text-heading text-xs text-brand-blue">
         Pilih batch perjalanan
       </span>
       <div
@@ -48,10 +48,10 @@ export default function BatchSwitcher({
               href={href}
               role="tab"
               aria-selected={isSelected}
-              className={`px-3.5 py-1.5 min-h-[44px] inline-flex items-center rounded-full border-2 border-brand-blue font-bold text-xs sm:text-sm whitespace-nowrap transition-colors focus-visible:outline-none ${
+              className={`px-3.5 py-1.5 min-h-[44px] inline-flex items-center rounded-full border-2 border-brand-blue text-xs sm:text-sm whitespace-nowrap transition-colors focus-visible:outline-none ${
                 isSelected
-                  ? "bg-brand-blue text-white"
-                  : "bg-white text-brand-blue hover:bg-brand-tint"
+                  ? "bg-brand-blue text-white text-btn"
+                  : "bg-white text-brand-blue text-label hover:bg-brand-tint"
               }`}
             >
               {b.name}

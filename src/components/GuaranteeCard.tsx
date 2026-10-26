@@ -17,7 +17,7 @@ export default function GuaranteeCard({ className = "" }: GuaranteeCardProps) {
         <RiVerifiedBadgeLine className="w-6 h-6 text-brand-orange" aria-hidden="true" />
       </div>
       <div className="flex flex-col">
-        <span className="font-body text-xs sm:text-sm text-brand-blue font-semibold">
+        <span className="font-body text-xs sm:text-sm text-brand-blue text-label">
           {GUARANTEE_TITLE}
         </span>
         <p className="font-body text-xs text-brand-blue/80 mt-0.5 leading-relaxed font-normal">

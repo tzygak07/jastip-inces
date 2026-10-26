@@ -19,7 +19,7 @@ export default function CustomRequestBox() {
           href={waLink}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center justify-center min-h-[44px] px-5 bg-brand-orange hover:bg-brand-orange-text text-white font-bold text-xs sm:text-sm rounded-[10px] border-2 border-brand-blue transition-all whitespace-nowrap active:translate-x-[1px] active:translate-y-[1px] btn-hover"
+          className="w-full md:w-auto inline-flex items-center justify-center min-h-[44px] px-5 bg-brand-orange hover:bg-brand-orange-text text-white text-btn text-xs sm:text-sm rounded-[10px] border-2 border-brand-blue transition-all whitespace-nowrap active:translate-x-[1px] active:translate-y-[1px] btn-hover shadow-[2px_2px_0px_#0B3C91] text-center"
         >
           Pesan lewat WhatsApp
         </a>

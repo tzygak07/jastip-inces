@@ -117,10 +117,10 @@ export default function CatalogControls({
       </form>
 
       {/* Sort Select */}
-      <div className="flex items-center gap-2 self-end md:self-auto">
+      <div className="flex items-center justify-between sm:justify-end gap-2 w-full md:w-auto">
         <label
           htmlFor="sort-select"
-          className="font-body text-xs sm:text-sm text-brand-blue font-bold whitespace-nowrap"
+          className="font-body text-xs sm:text-sm text-brand-blue text-label whitespace-nowrap"
         >
           Urutkan:
         </label>
@@ -129,7 +129,7 @@ export default function CatalogControls({
             id="sort-select"
             value={currentSort ?? initialSort}
             onChange={(e) => handleSortChange(e.target.value)}
-            className="appearance-none min-h-[44px] pl-3.5 pr-8 bg-white text-brand-blue font-body text-xs sm:text-sm font-semibold border-2 border-brand-blue rounded-[10px] cursor-pointer focus:outline-none"
+            className="appearance-none min-h-[44px] pl-3.5 pr-8 bg-white text-brand-blue font-body text-xs sm:text-sm text-label border-2 border-brand-blue rounded-[10px] cursor-pointer focus:outline-none shadow-[1px_1px_0px_#0B3C91]"
           >
             <option value="terbaru">Terbaru</option>
             <option value="murah">Harga terendah</option>

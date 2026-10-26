@@ -169,7 +169,7 @@ export default function CatalogSection({
                 <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
             </div>
-            <h3 className="font-heading font-semibold text-base sm:text-lg text-brand-blue">
+            <h3 className="text-heading text-base sm:text-lg text-brand-blue">
               Barang tidak ditemukan
             </h3>
             <p className="font-body text-xs sm:text-sm text-brand-blue/80 max-w-md">
@@ -178,7 +178,7 @@ export default function CatalogSection({
             <button
               type="button"
               onClick={() => handleSearchChange("")}
-              className="inline-flex items-center justify-center min-h-[44px] px-5 bg-brand-tint text-brand-blue font-semibold text-xs sm:text-sm rounded-[10px] border-2 border-brand-blue mt-2 btn-hover"
+              className="inline-flex items-center justify-center min-h-[44px] px-5 bg-brand-tint text-brand-blue text-btn text-xs sm:text-sm rounded-[10px] border-2 border-brand-blue mt-2 btn-hover"
             >
               Hapus pencarian
             </button>
@@ -198,7 +198,7 @@ export default function CatalogSection({
               </svg>
             </div>
             <div className="flex flex-col gap-1">
-              <h3 className="font-heading font-semibold text-base sm:text-lg text-brand-blue">
+              <h3 className="text-heading text-base sm:text-lg text-brand-blue">
                 Belum ada barang di kategori ini.
               </h3>
               <p className="font-body text-xs sm:text-sm text-brand-blue/80 max-w-md">
